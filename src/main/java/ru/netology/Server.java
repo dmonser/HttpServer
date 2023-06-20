@@ -33,7 +33,7 @@ public class Server {
         }
     }
 
-    private void connectionProcessing (Socket socket) {
+    private void connectionProcessing(Socket socket) {
         Runnable logic = () -> {
             try (
                     final var in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
