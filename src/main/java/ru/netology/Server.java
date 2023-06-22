@@ -66,20 +66,7 @@ public class Server {
 
                 // special case for classic
                 if (path.equals("/classic.html")) {
-                    final var template = Files.readString(filePath);
-                    final var content = template.replace(
-                            "{time}",
-                            LocalDateTime.now().toString()
-                    ).getBytes();
-                    out.write((
-                            "HTTP/1.1 200 OK\r\n" +
-                                    "Content-Type: " + mimeType + "\r\n" +
-                                    "Content-Length: " + content.length + "\r\n" +
-                                    "Connection: close\r\n" +
-                                    "\r\n"
-                    ).getBytes());
-                    out.write(content);
-                    out.flush();
+                    classicCaseProcessing(filePath, out, mimeType);
                     return;
                 }
 
@@ -99,5 +86,22 @@ public class Server {
         };
 
         threadPool.submit(logic);
+    }
+
+    private void classicCaseProcessing(Path filePath, BufferedOutputStream out, String mimeType) throws IOException {
+        final var template = Files.readString(filePath);
+        final var content = template.replace(
+                "{time}",
+                LocalDateTime.now().toString()
+        ).getBytes();
+        out.write((
+                "HTTP/1.1 200 OK\r\n" +
+                        "Content-Type: " + mimeType + "\r\n" +
+                        "Content-Length: " + content.length + "\r\n" +
+                        "Connection: close\r\n" +
+                        "\r\n"
+        ).getBytes());
+        out.write(content);
+        out.flush();
     }
 }
